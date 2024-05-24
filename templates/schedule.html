@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            width: 100%;
+            position: relative;
+        }
+        .header .link-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .container {
+            display: flex;
+            width: 80%;
+            border: 1px solid #ccc;
+            padding: 10px;
+            flex-grow: 1;
+            box-sizing: border-box;
+        }
+        .left-widget {
+            width: 30%;
+            border-right: 1px solid #ccc;
+            padding: 10px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        .right-widget {
+            width: 60%;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+        .draggable {
+            background-color: #f0f0f0;
+            padding: 10px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .draggable:hover {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+            transform: scale(1.05); 
+        }
+        .draggable:active {
+            transform: scale(1.05); 
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); 
+        }
+        .dragging {
+            opacity: 0.5;
+            transform: scale(0.9);
+        }
+        .droppable {
+            background-color: #e0e0e0;
+            padding: 20px;
+            border: 2px dashed #ccc;
+            min-height: 28px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+            position: relative;
+        }
+        .trash-icon {
+            display: none;
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            cursor: pointer;
+        }
+        .droppable:hover .trash-icon {
+            display: block;
+        }
+        .droppable.empty .trash-icon {
+            display: none;
+        }
+        .button-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+        }
+        .button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .material-icons {
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="https://127.0.0.1:30000/schedule" class="link-button">Назад у меню</a>
+        <h1>{{title}}</h1>
+    </div>
+    
+    <div class="container">
+        <div class="left-widget" id="left-widget">
+            {% for subject in all_subjects %}
+                <div class="draggable" draggable="true" ondragstart="onDragStart(event)">{{ subject }}</div>
+            {% endfor %}
+        </div>
+        <div class="right-widget" id="right-widget">
+            {% for subject in schedule %}
+                <div class="droppable {{ 'empty' if not subject }}" id="{{ schedule.index(subject) }}">
+                    <span class="droppable-text">{{ subject }}</span>
+                    {% if subject %}
+                        <span class="material-icons trash-icon" onclick="clearDroppable(event)">delete</span>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+        
+        <div class="button-container">
+            <div class="button" onclick="sendData()">Зберегти</div>
+        </div>
+    </div>
+    
+    <script>
+        function sendData() {
+            const rightWidget = document.getElementById('right-widget');
+            const widgets = rightWidget.querySelectorAll('.droppable');
+            const dataToSend = Array.from(widgets).map(widget => {
+                const textElement = widget.querySelector('.droppable-text');
+                const text = textElement ? textElement.textContent.trim() : '';
+                return text === '' ? 0 : text;
+            });
+    
+            $.ajax({
+                url: '{{route}}',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ subjects: dataToSend }),
+                success: function(response) {
+                    console.log('Дані успішно відправлені:', response);
+                },
+                error: function(error) {
+                    console.log('Помилка під час відправки даних:', error);
+                }
+            });
+        }
+
+        function onDragStart(event) {
+            event.target.classList.add('dragging');
+        }
+
+        function clearDroppable(event) {
+            const droppable = event.target.closest('.droppable');
+            const textElement = droppable.querySelector('.droppable-text');
+            if (textElement) {
+                textElement.textContent= '';
+                droppable.classList.add('empty');
+            }
+        }
+
+        document.addEventListener('dragend', function(event) {
+            const draggedElement = event.target;
+            draggedElement.classList.remove('dragging');
+        });
+    
+        document.addEventListener('DOMContentLoaded', () => {
+            const draggables = document.querySelectorAll('.draggable');
+            const droppables = document.querySelectorAll('.droppable');
+    
+            draggables.forEach(draggable => {
+                draggable.addEventListener('dragstart', (event) => {
+                    event.dataTransfer.setData('text', event.target.textContent);
+                });
+            });
+    
+            droppables.forEach(droppable => {
+                droppable.addEventListener('dragover', (event) => {
+                    event.preventDefault();
+                });
+    
+                droppable.addEventListener('drop', (event) => {
+                    event.preventDefault();
+                    const data = event.dataTransfer.getData('text');
+                    const textElement = droppable.querySelector('.droppable-text');
+                    if (textElement) {
+                        textElement.textContent = data;
+                    } else {
+                        const newTextElement = document.createElement('span');
+                        newTextElement.className = 'droppable-text';
+                        newTextElement.textContent = data;
+                        droppable.appendChild(newTextElement);
+                    }
+                    droppable.classList.remove('empty');
+                    if (!droppable.querySelector('.trash-icon')) {
+                        const trashIcon = document.createElement('span');
+                        trashIcon.className = 'material-icons trash-icon';
+                        trashIcon.innerText = 'delete';
+                        trashIcon.onclick = clearDroppable;
+                        droppable.appendChild(trashIcon);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

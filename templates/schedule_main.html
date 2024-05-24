@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three Centered Buttons</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .header {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+        .link-button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .link-button:hover {
+            background-color: #0056b3;
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .button {
+            padding: 20px 40px;
+            font-size: 24px;
+            color: white;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 10px;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="https://127.0.0.1:30000/" class="link-button">Назад у меню</a>
+    </div>
+    <div class="button-container">
+        <a href="https://127.0.0.1:30000/schedule/monday" class="button">Розклад на понеділок</a>
+        <a href="https://127.0.0.1:30000/schedule/tuesday" class="button">Розклад на вівторок</a>
+        <a href="https://127.0.0.1:30000/schedule/wednesday" class="button">Розклад на середу</a>
+        <a href="https://127.0.0.1:30000/schedule/thursday" class="button">Розклад на четвер</a>
+        <a href="https://127.0.0.1:30000/schedule/friday" class="button">Розклад на п'ятницю</a>
+    </div>
+</body>
+</html>
