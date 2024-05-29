@@ -16,7 +16,7 @@ origins = [
 ]
 
 
-print('hello')
+
 
 
 app = FastAPI()
