@@ -45,6 +45,7 @@ async def get_names_by_id_api(id: int):
 @router.post('/add_marks_post')
 async def send_info_to_db(request:Request):
     print(request.form())
+    return RedirectResponse('https://journal-interactive.onrender.com/add_marks',status_code=307)
 
 
     # data = await request.body()
