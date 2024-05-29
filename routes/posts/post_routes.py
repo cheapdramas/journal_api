@@ -44,20 +44,23 @@ async def get_names_by_id_api(id: int):
 
 @router.post('/add_marks_post')
 async def send_info_to_db(request:Request):
-    data = await request.body()
-    data = jsonable_encoder(data).split('&')
-    hash_data ={}
-    for i in data:
-        hash_data[i.split('=')[0]] = i.split('=')[1] 
+    print(request.form())
+
+
+    # data = await request.body()
+    # data = jsonable_encoder(data).split('&')
+    # hash_data ={}
+    # for i in data:
+    #     hash_data[i.split('=')[0]] = i.split('=')[1] 
     
-    print(hash_data)
+    # print(hash_data)
     
-    date_ = datetime.now(IST).date()
-    time = str(datetime.now(IST)).split(' ')[1].split('.')[0].split(':')[0]+':'+ str(datetime.now(IST)).split(' ')[1].split('.')[0].split(':')[1]
-    subject = all_subjects[int(hash_data['subject'])]
-    if hash_data['reason'] == '':
-        hash_data['reason'] = None
-    add_mark(int(hash_data['student']),subject,int(hash_data['mark']),hash_data['reason'],date_,time)
+    # date_ = datetime.now(IST).date()
+    # time = str(datetime.now(IST)).split(' ')[1].split('.')[0].split(':')[0]+':'+ str(datetime.now(IST)).split(' ')[1].split('.')[0].split(':')[1]
+    # subject = all_subjects[int(hash_data['subject'])]
+    # if hash_data['reason'] == '':
+    #     hash_data['reason'] = None
+    # add_mark(int(hash_data['student']),subject,int(hash_data['mark']),hash_data['reason'],date_,time)
 
     
     
