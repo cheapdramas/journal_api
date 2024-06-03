@@ -13,7 +13,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 origins = [
     'https://127.0.0.1:8000',
-    'https://journal-interactive-1.onrender.com/'
+    'https://journal-interactive-1.onrender.com'
 ]
 
 
