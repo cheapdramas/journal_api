@@ -9,6 +9,7 @@ import schemas.delete_device
 import schemas.get_marks_subject
 from schemas.get_name_by_id import NameById
 from typing import Optional
+from urllib import parse
 from fastapi.responses import RedirectResponse
 from datetime import date,datetime
 import pytz
@@ -57,6 +58,9 @@ async def send_info_to_db(request:Request):
     subject = all_subjects[int(hash_data['subject'])]
     if hash_data['reason'] == '':
         hash_data['reason'] = None
+
+    if str(request.url) == 'https://13.60.35.192.traefik.me/add_marks':
+        hash_data['reason'] = parse.unquote(hash_data['reason'])
     add_mark(int(hash_data['student']),subject,int(hash_data['mark']),hash_data['reason'],date_,time)
 
     
