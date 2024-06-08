@@ -59,8 +59,7 @@ async def send_info_to_db(request:Request):
     if hash_data['reason'] == '':
         hash_data['reason'] = None
     print(type(request.url),request.client.host)
-    # if str(request.url) == 'https://13.60.35.192.traefik.me/add_marks_post':
-    #     hash_data['reason'] = parse.unquote(hash_data['reason'])
+    hash_data['reason'] = parse.unquote(hash_data['reason'])
     add_mark(int(hash_data['student']),subject,int(hash_data['mark']),hash_data['reason'],date_,time)
 
     
