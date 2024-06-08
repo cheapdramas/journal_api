@@ -60,6 +60,7 @@ async def send_info_to_db(request:Request):
         hash_data['reason'] = None
     print(type(request.url),request.client.host)
     hash_data['reason'] = parse.unquote(hash_data['reason'])
+    print(hash_data['reason'])
     add_mark(int(hash_data['student']),subject,int(hash_data['mark']),hash_data['reason'],date_,time)
 
     
