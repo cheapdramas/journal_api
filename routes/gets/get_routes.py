@@ -28,6 +28,7 @@ security = HTTPBasic()
 
 @router.get('/')
 async def lobby(request:Request):
+    print(request.url)
     return templates.TemplateResponse('this_is_just_api.html',{'request':request})
 
 
