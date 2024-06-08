@@ -14,6 +14,7 @@ from fastapi.middleware.cors import CORSMiddleware
 origins = [
     'https://127.0.0.1:8000',
     'http://127.0.0.1:8000',
+    "https://13.60.35.192.traefik.me",
     'https://journal-interactive-1.onrender.com'
 ]
 
